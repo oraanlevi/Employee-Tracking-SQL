@@ -4,7 +4,12 @@
   "description": "AS A business owner\r I WANT to be able to view and manage the departments, roles, and employees in my company\r SO THAT I can organize and plan my business",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "mysql db/employees.db < db/schema.sql",
+    "seed": "mysql db/employees.db < db/seeds.sql",
+    "db": "mysql db/employees.db",
+    "watch": "nodemon server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +24,7 @@
   "dependencies": {
     "console-table": "^0.1.2",
     "inquirer": "^9.1.4",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.20"
   }
 }
