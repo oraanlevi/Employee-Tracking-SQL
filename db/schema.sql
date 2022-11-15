@@ -3,12 +3,12 @@ CREATE DATABASE employees;
 USE employees;
 
 CREATE TABLE department (
-    id INIT PRIMARY KEY AUTO_INCREMENT.
-    deaprtment_name VARCHAR(30) NOT NULL
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    department_name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE role (
-    id INIT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL(10, 2) NOT NULL,
     department_id INT 
@@ -17,7 +17,7 @@ CREATE TABLE role (
 
 CREATE TABLE employee (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    first_name VRACHAR(30) NOT NULL
+    first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     role_id INT,
     manager_id INT
