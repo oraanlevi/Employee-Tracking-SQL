@@ -110,7 +110,7 @@ const init = () => {
                 break;
             
             case "View All Employees By Department":
-                allEmployeeDepartment();
+                allEmployeeDepartments();
                 break;
             
             case "View All Employees by Manager":
@@ -134,7 +134,7 @@ const init = () => {
                 break;
             
             case "View All Roles":
-                updateRole();
+                allRoles();
                 break;
             
             case "View All Managers":
@@ -219,3 +219,106 @@ const allRoles = () => {
         init();
     })
 };
+
+const allEmployeeDepartments = () => {
+    inquirer.prompt({
+        type: 'otherlist',
+        name: 'departments',
+        message: 'Choose a department?',
+        choices: ['Engineering', 'Finance', 'Legal' ]
+    }).then((answer) => {
+        if (answer.departments === 'Engineering') {
+        connection.query(`SELECT employee.first_name, employee.Last_name FROM employee
+        JOIN role ON employee.role_id = role_id
+        JOIN department ON role.department_id = department.department_id and department.role = "Engineering"`, (err, res) => {
+            console.log('ENGINEERING')
+            if (err) throw err;
+            console.table(res);
+            init()
+        })
+    }
+    else if (answer.departments === 'Finance'){
+        connection.query(`SELECT employee.first_name, employee.Last_name FROM employee
+        JOIN role ON employee.role_id = role_id
+        JOIN department ON role.department_id = department.department_id and department.role = "Finanace"`, (err, res) => {
+            console.log('FINANACE')
+            if (err) throw err;
+            console.table(res);
+            init()
+        })
+    }
+    else if(answer.departments === 'Legal'){
+        connection.query(`SELECT employee.first_name, employee.Last_name FROM employee
+        JOIN role ON employee.role_id = role_id
+        JOIN department ON role.department_id = department.department_id and department.role = "Legal"`, (err, res) => {
+            console.log('LEGAL')
+            if (err) throw err;
+            console.table(res);
+            init()
+        })
+    }
+    
+});
+};
+
+
+addEmployee = () => {
+    managers.push('none');
+    inquirer.prompt([
+        {
+        type: 'input',
+        name: 'first_name',
+        message: 'What is your first name?'
+        },
+        {
+        type: 'input',
+        name: 'last_name',
+        message: 'What is your last name?'
+        },
+        {
+        type: 'list',
+        name: 'role',
+        message: 'What is your position?',
+        choices: roles
+        },
+        {
+        type: 'list',
+        name: 'manager',
+        message: 'Who is your manager?',
+        choices: managers
+        },
+    ]).then((answer) => {
+        if (answer.manager === 'none') {
+            connection.query(`INSERT INTO employee(fisrt_name, last_name, role_id, manager_id)
+            VALUES ('${answer.first_name}', '${answer.last_name}', ${answer.role}, null)`, (err, res) => {
+                if (err) throw err;
+                init();
+            });
+        }
+        else {
+            connection.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id)
+            VALUES ('${answer.first_name}', '${answer.last_name}', ${answer.role}, ${answer.manager})`, (err, res) => {
+                if (err) throw err;
+                init();
+        })
+    }
+})
+}
+    
+
+const removeEmployee = () => {
+    inquirer.prompt({
+        type: 'list',
+        name: 'employee',
+        message: 'Who would you like to remove?',
+        choices: employees 
+    
+    }).then((answer) => {
+        connection.query(`DELETE FROM employee WHERE id =${answer.employee}`, (err, res) => {
+            if (err) throw err;
+            init();
+        })
+        console.log(answer)
+    })
+}
+init()
