@@ -90,6 +90,7 @@ const init = () => {
         type: 'otherlist',
         message: 'Choose one',
         choices: [
+
             "View All Employees",
             "View All Employees by Department",
             "View All Employees By manager",
@@ -102,7 +103,6 @@ const init = () => {
             
         ],
     })
-
     .then((answer) => {
         switch (answer.init) {
             case "View All Employees":
@@ -165,11 +165,34 @@ const allEmployeeManagers = () => {
     })
 };
 
+const updateManager = () => {
+    inquirer.prompt([{
+        type: 'list',
+        name: 'employee',
+        message: 'What employee is getting a new manager?',
+        choices: employees
+    },
+    {
+    type: 'list',
+    name: 'manager',
+    message: 'Who is your new manager?',
+    choices: managers
+    },
+]).then((answer) => {
+    connection.query(`UPDATE employee
+     SET manager_id = ${answer.manager}
+    WHERE id = ${answer.employee}`, (err, res) => {
+        if (err) throw err;
+        init()
+    })
+})
+};
+
 const updateRole = () => {
     inquirer.prompt([{
         type: 'list',
         name: 'employee',
-        message: 'Which employee is getting a new role?',
+        message: 'Whose role are we updating?',
         choices: employees
     },
     {
@@ -262,6 +285,7 @@ const allEmployeeDepartments = () => {
 };
 
 
+
 addEmployee = () => {
     managers.push('none');
     inquirer.prompt([
@@ -295,6 +319,7 @@ addEmployee = () => {
                 init();
             });
         }
+        
         else {
             connection.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id)
             VALUES ('${answer.first_name}', '${answer.last_name}', ${answer.role}, ${answer.manager})`, (err, res) => {
